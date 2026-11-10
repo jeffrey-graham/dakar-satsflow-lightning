@@ -5,6 +5,9 @@
 > **60-Second 1080p Walkthrough Video:** [`demo.mp4`](demo.mp4)  
 > **Core Cryptographic & Routing Engine:** [`src/satsflow_engine.py`](src/satsflow_engine.py)
 
+> [!NOTE]
+> **Implementation & Simulation Status:** `src/satsflow_engine.py` implements local BOLT-11 Bech32 encoding/decoding, HMAC-SHA256 L402 macaroon caveats, Dijkstra/MPP route modeling, and RFC 9285 Base45 voucher compression; channel topologies are modeled offline (not connected to a live `lnd`/`cln` node), and the GitHub Pages UI runs client-side simulations.
+
 ---
 
 ## 1. Problem Statement
