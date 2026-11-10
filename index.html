@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SatsFlow | Lightning L402 &amp; Offline-Resilient Cross-Border Micro-Settlement for West Africa — Dakar Bitcoin Hack</title>
+  <style>
+    :root {
+      --bg-dark: #070a12;
+      --bg-card: #0f1626;
+      --bg-card-alt: #151f36;
+      --border-col: #1e293b;
+      --btc-orange: #f7931a;
+      --btc-gold: #fbbf24;
+      --accent-emerald: #10b981;
+      --accent-cyan: #38bdf8;
+      --accent-rose: #f43f5e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(247, 147, 26, 0.11), transparent 28%),
+        radial-gradient(circle at 88% 15%, rgba(16, 185, 129, 0.08), transparent 30%);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(15, 22, 38, 0.92);
+      border-bottom: 1px solid var(--border-col);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-bar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-badge {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, #f7931a, #d97706);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 20px; color: #070a12;
+      box-shadow: 0 0 18px rgba(247, 147, 26, 0.4);
+    }
+    .brand-title { font-size: 18px; font-weight: 800; color: #fff; }
+    .brand-sub { font-size: 11.5px; color: var(--text-muted); }
+    .tabs {
+      display: flex; gap: 6px; background: #060911; padding: 5px;
+      border-radius: 10px; border: 1px solid var(--border-col);
+    }
+    .tab-btn {
+      background: transparent; border: 1px solid transparent; color: var(--text-muted);
+      padding: 7px 13px; border-radius: 7px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.16s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      background: rgba(247, 147, 26, 0.18);
+      color: var(--btc-orange);
+      border-color: rgba(247, 147, 26, 0.48);
+    }
+    .pill-live {
+      font-size: 11px; font-family: var(--font-mono);
+      padding: 5px 10px; border-radius: 999px;
+      background: rgba(247, 147, 26, 0.15); color: var(--btc-gold);
+      border: 1px solid rgba(247, 147, 26, 0.4);
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 18px 24px 36px; }
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px;
+    }
+    .kpi-card {
+      background: var(--bg-card); border: 1px solid var(--border-col);
+      border-radius: 12px; padding: 14px 16px; position: relative; overflow: hidden;
+    }
+    .kpi-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--btc-orange), var(--accent-emerald));
+    }
+    .kpi-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .kpi-val { font-size: 23px; font-weight: 800; font-family: var(--font-mono); color: #fff; }
+    .kpi-sub { font-size: 11.5px; color: var(--accent-emerald); margin-top: 3px; font-weight: 600; }
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border-col);
+      border-radius: 14px; padding: 18px 20px;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      padding-bottom: 10px; margin-bottom: 14px;
+    }
+    .card-title { font-size: 14.5px; font-weight: 700; color: #f8fafc; }
+    .chip {
+      font-size: 11px; font-family: var(--font-mono); padding: 3px 8px;
+      border-radius: 6px; background: rgba(247, 147, 26, 0.16); color: var(--btc-orange);
+    }
+    .control-box {
+      background: #080d18; border: 1px solid #1e293b; border-radius: 10px;
+      padding: 11px 14px; margin-bottom: 12px;
+    }
+    .control-top {
+      display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--btc-orange); cursor: pointer; }
+    select {
+      width: 100%; background: #0f1626; color: #fff; border: 1px solid #334155;
+      border-radius: 7px; padding: 7px 10px; font-size: 12.5px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    th {
+      text-align: left; padding: 8px 10px; font-size: 11px; text-transform: uppercase;
+      color: var(--text-muted); border-bottom: 1px solid var(--border-col);
+    }
+    td { padding: 9px 10px; border-bottom: 1px solid rgba(30, 41, 59, 0.65); font-family: var(--font-mono); }
+    .code-pre {
+      background: #05080f; border: 1px solid #1e293b; border-radius: 9px;
+      padding: 10px 12px; font-family: var(--font-mono); font-size: 11.5px;
+      color: #fbbf24; white-space: pre-wrap; word-break: break-all;
+    }
+    .btn-btc {
+      background: linear-gradient(135deg, #f7931a, #ea580c); color: #070a12;
+      border: none; padding: 8px 15px; border-radius: 8px; font-size: 12px;
+      font-weight: 800; cursor: pointer;
+    }
+    .bar-track {
+      width: 100%; height: 10px; background: #060911; border-radius: 999px; overflow: hidden; margin-top: 4px;
+    }
+    .bar-fill { height: 100%; border-radius: 999px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-bar">
+      <div class="brand">
+        <div class="brand-badge">₿</div>
+        <div>
+          <div class="brand-title">SatsFlow <span style="font-weight:400;font-size:12.5px;color:#f7931a;">Dakar Bitcoin Hack by BTrust</span></div>
+          <div class="brand-sub">Lightning L402 Macaroon API Gateway, Multi-Path Routing &amp; Offline USSD Settlement for West Africa</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-btn-remittance" onclick="setTab('remittance')">1. XOF/NGN/GHS Remittance Comparator</button>
+        <button class="tab-btn" id="tab-btn-l402" onclick="setTab('l402')">2. BOLT-11 &amp; L402 Macaroon Sandbox</button>
+        <button class="tab-btn" id="tab-btn-mpp" onclick="setTab('mpp')">3. Multi-Path (MPP) Route Graph</button>
+        <button class="tab-btn" id="tab-btn-ussd" onclick="setTab('ussd')">4. Offline USSD &amp; Base45 Voucher</button>
+      </div>
+
+      <span class="pill-live">⚡ BOLT-11 + L402 + USSD VERIFIED</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">SatsFlow Settlement Fee</div>
+        <div class="kpi-val" id="kpi-fee">0.26%</div>
+        <div class="kpi-sub">vs 7.85% Legacy Remittance Avg</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">HTLC Finality Latency</div>
+        <div class="kpi-val" id="kpi-latency">64 ms</div>
+        <div class="kpi-sub">Instant Dakar / Lagos / Accra Off-Ramp</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">L402 API Verification</div>
+        <div class="kpi-val">HMAC + SHA256</div>
+        <div class="kpi-sub">Zero-Account HTTP 402 Micro-Paywall</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Feature-Phone Access</div>
+        <div class="kpi-val">*789*SATS#</div>
+        <div class="kpi-sub">RFC 9285 Base45 Offline SMS Voucher</div>
+      </div>
+    </section>
+
+    <!-- TAB 1: REMITTANCE COMPARATOR -->
+    <section id="view-remittance" class="view-section active">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">West African Diaspora Remittance Corridor Simulator</div>
+            <span class="chip">ECOWAS / UEMOA Rails</span>
+          </div>
+
+          <div class="control-box">
+            <div class="control-top">
+              <span>Send Amount (EUR / Diaspora Origin)</span>
+              <strong style="color:var(--btc-orange);font-family:monospace;" id="remit-amt-label">€200.00</strong>
+            </div>
+            <input type="range" id="remit-amt" min="25" max="2000" step="25" value="200" oninput="updateRemittance()" />
+          </div>
+
+          <div class="control-box">
+            <div class="control-top"><span>Destination Settlement Corridor</span></div>
+            <select id="remit-corridor" onchange="updateRemittance()">
+              <option value="XOF">Paris (EUR) → Dakar, Senegal (XOF BCEAO / Wave &amp; Orange Money)</option>
+              <option value="NGN">London / EU (EUR) → Lagos, Nigeria (NGN Instant NIP)</option>
+              <option value="GHS">Brussels (EUR) → Accra, Ghana (GHS Mobile Money)</option>
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+            <div style="background:#080d18;border:1px solid rgba(247,147,26,0.45);border-radius:10px;padding:13px;">
+              <div style="font-size:11px;color:var(--text-muted);">RECIPIENT RECEIVES VIA SATSFLOW</div>
+              <div style="font-size:24px;font-weight:800;font-family:monospace;color:var(--btc-orange);margin:4px 0;" id="remit-out-fiat">130,620 XOF</div>
+              <div style="font-size:11.5px;color:#34d399;" id="remit-out-sats">235,294 Sats Settled in 64 ms</div>
+            </div>
+            <div style="background:#080d18;border:1px solid rgba(16,185,129,0.45);border-radius:10px;padding:13px;">
+              <div style="font-size:11px;color:var(--text-muted);">DIASPORA FAMILY SAVINGS</div>
+              <div style="font-size:24px;font-weight:800;font-family:monospace;color:#34d399;margin:4px 0;" id="remit-savings">+€17.98 Saved</div>
+              <div style="font-size:11.5px;color:#cbd5e1;" id="remit-savings-local">+11,780 XOF Kept by Family</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Total Fee &amp; FX Spread Breakdown vs Legacy Rails</div>
+            <span class="chip">World Bank Remittance Benchmark</span>
+          </div>
+          <div id="remit-bars-container"></div>
+
+          <table style="margin-top:14px;">
+            <thead>
+              <tr>
+                <th>Settlement Rail</th>
+                <th>Total Fee (EUR)</th>
+                <th>Effective Cost %</th>
+                <th>Settlement Speed</th>
+              </tr>
+            </thead>
+            <tbody id="remit-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: BOLT-11 & L402 SANDBOX -->
+    <section id="view-l402" class="view-section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">L402 (LSAT) Macaroon + BOLT-11 HTTP 402 API Gateway</div>
+            <span class="chip">BIP-173 Bech32 + HMAC-SHA256</span>
+          </div>
+
+          <div class="control-box">
+            <div class="control-top"><span>Protected West African Micro-API Resource</span></div>
+            <select id="l402-resource" onchange="updateL402Sandbox()">
+              <option value="/v1/dakar/wave-xof-quote|250">POST /v1/dakar/wave-xof-quote (250 Sats / ~139 XOF)</option>
+              <option value="/v1/lagos/ngn-liquidity-lock|600">POST /v1/lagos/ngn-liquidity-lock (600 Sats / ~894 NGN)</option>
+              <option value="/v1/solar-minigrid/touba-meter|120">POST /v1/solar-minigrid/touba-meter (120 Sats / ~67 XOF)</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:5px;">1. HTTP 402 Challenge (`WWW-Authenticate: L402` Header):</div>
+            <pre class="code-pre" id="l402-challenge-box"></pre>
+          </div>
+
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:5px;">2. Decoded Chained HMAC-SHA256 Macaroon Caveats:</div>
+            <pre class="code-pre" style="color:#38bdf8;" id="l402-macaroon-box"></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">BOLT-11 Invoice Inspector &amp; Preimage Verification</div>
+            <span class="chip" id="l402-status-chip">HTTP 200 AUTHORIZED</span>
+          </div>
+
+          <table style="margin-bottom:14px;">
+            <tbody id="bolt11-decoded-tbody"></tbody>
+          </table>
+
+          <div style="background:#080d18;border:1px solid rgba(16,185,129,0.45);border-radius:10px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <strong style="font-size:13px;color:#34d399;">✓ Atomic HTLC Preimage Verification (`SHA256(preimage) == payment_hash`)</strong>
+              <button class="btn-btc" onclick="triggerPreimageVerify()">Verify L402 Token</button>
+            </div>
+            <pre class="code-pre" style="color:#34d399;" id="l402-verify-output"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MULTI-PATH (MPP) LIGHTNING ROUTE GRAPH -->
+    <section id="view-mpp" class="view-section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">West Africa ↔ Europe Lightning Topology &amp; MPP Simulator</div>
+            <span class="chip" id="mpp-mode-chip">MULTI_PATH_PAYMENT_MPP</span>
+          </div>
+
+          <div class="control-box">
+            <div class="control-top">
+              <span>Settlement Volume (Sats) — Above 480k Sats Triggers Automatic MPP Split</span>
+              <strong style="color:var(--btc-orange);font-family:monospace;" id="mpp-amt-label">750,000 Sats</strong>
+            </div>
+            <input type="range" id="mpp-amt" min="100000" max="900000" step="50000" value="750000" oninput="updateMppGraph()" />
+          </div>
+
+          <div id="mpp-svg-container" style="width:100%;background:#060a12;border:1px solid #1e293b;border-radius:12px;padding:10px;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Dijkstra &amp; Multi-Path Payment (MPP) Shard Allocation</div>
+            <span class="chip">BOLT-04 Onion Routing</span>
+          </div>
+          <div id="mpp-shards-container"></div>
+
+          <table style="margin-top:12px;">
+            <thead>
+              <tr>
+                <th>Channel ID</th>
+                <th>Directional Hop</th>
+                <th>Capacity</th>
+                <th>Base + PPM Fee</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody id="mpp-channels-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: OFFLINE USSD & BASE45 VOUCHER -->
+    <section id="view-ussd" class="view-section">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Feature-Phone USSD (`*789#`) &amp; RFC 9285 Base45 Offline Voucher</div>
+            <span class="chip">Zero-Internet Settlement</span>
+          </div>
+
+          <div class="control-box">
+            <div class="control-top">
+              <span>Offline Voucher Value (Satoshis)</span>
+              <strong style="color:var(--btc-orange);font-family:monospace;" id="ussd-sats-label">50,000 Sats (27,830 XOF)</strong>
+            </div>
+            <input type="range" id="ussd-sats" min="5000" max="250000" step="5000" value="50000" oninput="updateUssdVoucher()" />
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:5px;">Feature-Phone USSD Dial String (Orange SN / Free / MTN / Airtel):</div>
+            <div style="background:#05080f;border:2px solid var(--btc-orange);border-radius:10px;padding:14px;font-family:monospace;font-size:22px;font-weight:800;color:var(--btc-gold);text-align:center;" id="ussd-dial-box">
+              *789*1*50000*482910#
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:5px;">Compact RFC 9285 Base45 SMS Payload (Fits in Single 160-Char GSM SMS):</div>
+            <pre class="code-pre" id="ussd-b45-box"></pre>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Offline Merchant Verification &amp; USSD Menu Preview</div>
+            <span class="chip">HMAC-SHA256 Signed</span>
+          </div>
+          <div style="display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px;align-items:center;">
+            <div style="background:#05080f;border:2px solid #334155;border-radius:18px;padding:16px;font-family:monospace;font-size:12px;color:#34d399;">
+              <div style="color:#94a3b8;border-bottom:1px solid #1e293b;padding-bottom:6px;margin-bottom:8px;">DAKAR USSD GATEWAY (*789#)</div>
+              <div id="ussd-screen-text"></div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#cbd5e1;margin-bottom:6px;">Decoded &amp; Verified Voucher JSON:</div>
+              <pre class="code-pre" style="color:#38bdf8;" id="ussd-json-box"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
